@@ -5,6 +5,7 @@
  *
  * altorder.out - test output for 64-bit systems and
  * altorder_1.out - test output for 32-bit systems.
+ * altorder_3.out - test output for 32-bit systems (Rel 18).
  *
  */
 CREATE TABLE atsts (id int, t tsvector, d timestamp);

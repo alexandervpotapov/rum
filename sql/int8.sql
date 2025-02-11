@@ -5,6 +5,7 @@
  *
  * int8.out - test output for 64-bit systems and
  * int8_1.out - test output for 32-bit systems.
+ * int8_3.out - test output for 32-bit systems (Rel 18).
  *
  */
 

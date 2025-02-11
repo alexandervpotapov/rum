@@ -234,9 +234,11 @@ SELECT count(*) FROM test_int8_a WHERE id < 400::int8;
               QUERY PLAN              
 --------------------------------------
  Aggregate
+   Disabled Nodes: 1
    ->  Seq Scan on test_int8_a
+         Disabled Nodes: 1
          Filter: (id < '400'::bigint)
-(3 rows)
+(5 rows)
 
 SELECT count(*) FROM test_int8_a WHERE id < 400::int8;
  count 
@@ -249,11 +251,14 @@ SELECT id, id <=> 400 FROM test_int8_a WHERE t @@ 'wr&qh' ORDER BY id <=> 400 LI
                        QUERY PLAN                        
 ---------------------------------------------------------
  Limit
+   Disabled Nodes: 1
    ->  Sort
+         Disabled Nodes: 1
          Sort Key: ((id <=> '400'::bigint))
          ->  Seq Scan on test_int8_a
+               Disabled Nodes: 1
                Filter: (t @@ '''wr'' & ''qh'''::tsquery)
-(5 rows)
+(8 rows)
 
 SELECT id, id <=> 400 FROM test_int8_a WHERE t @@ 'wr&qh' ORDER BY id <=> 400 LIMIT 5;
  id  | ?column? 
@@ -270,11 +275,14 @@ SELECT id, id <=| 400 FROM test_int8_a WHERE t @@ 'wr&qh' ORDER BY id <=| 400 LI
                        QUERY PLAN                        
 ---------------------------------------------------------
  Limit
+   Disabled Nodes: 1
    ->  Sort
+         Disabled Nodes: 1
          Sort Key: ((id <=| '400'::bigint))
          ->  Seq Scan on test_int8_a
+               Disabled Nodes: 1
                Filter: (t @@ '''wr'' & ''qh'''::tsquery)
-(5 rows)
+(8 rows)
 
 SELECT id, id <=| 400 FROM test_int8_a WHERE t @@ 'wr&qh' ORDER BY id <=| 400 LIMIT 5;
  id  | ?column? 
@@ -291,11 +299,14 @@ SELECT id, id |=> 400 FROM test_int8_a WHERE t @@ 'wr&qh' ORDER BY id |=> 400 LI
                        QUERY PLAN                        
 ---------------------------------------------------------
  Limit
+   Disabled Nodes: 1
    ->  Sort
+         Disabled Nodes: 1
          Sort Key: ((id |=> '400'::bigint))
          ->  Seq Scan on test_int8_a
+               Disabled Nodes: 1
                Filter: (t @@ '''wr'' & ''qh'''::tsquery)
-(5 rows)
+(8 rows)
 
 SELECT id, id |=> 400 FROM test_int8_a WHERE t @@ 'wr&qh' ORDER BY id |=> 400 LIMIT 5;
  id  | ?column? 
@@ -312,10 +323,12 @@ SELECT id FROM test_int8_a WHERE  t @@ 'wr&qh' AND id <= 400::int8 ORDER BY id;
                                   QUERY PLAN                                   
 -------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: id
    ->  Seq Scan on test_int8_a
+         Disabled Nodes: 1
          Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (id <= '400'::bigint))
-(4 rows)
+(6 rows)
 
 SELECT id FROM test_int8_a WHERE  t @@ 'wr&qh' AND id <= 400::int8 ORDER BY id;
  id  
@@ -337,10 +350,12 @@ SELECT id FROM test_int8_a WHERE  t @@ 'wr&qh' AND id >= 400::int8 ORDER BY id;
                                   QUERY PLAN                                   
 -------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: id
    ->  Seq Scan on test_int8_a
+         Disabled Nodes: 1
          Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (id >= '400'::bigint))
-(4 rows)
+(6 rows)
 
 SELECT id FROM test_int8_a WHERE  t @@ 'wr&qh' AND id >= 400::int8 ORDER BY id;
  id  
@@ -515,9 +530,11 @@ SELECT count(*) FROM test_int8_h_a WHERE id < 400::int8;
               QUERY PLAN              
 --------------------------------------
  Aggregate
+   Disabled Nodes: 1
    ->  Seq Scan on test_int8_h_a
+         Disabled Nodes: 1
          Filter: (id < '400'::bigint)
-(3 rows)
+(5 rows)
 
 SELECT count(*) FROM test_int8_h_a WHERE id < 400::int8;
  count 
@@ -530,11 +547,14 @@ SELECT id, id <=> 400 FROM test_int8_h_a WHERE t @@ 'wr&qh' ORDER BY id <=> 400 
                        QUERY PLAN                        
 ---------------------------------------------------------
  Limit
+   Disabled Nodes: 1
    ->  Sort
+         Disabled Nodes: 1
          Sort Key: ((id <=> '400'::bigint))
          ->  Seq Scan on test_int8_h_a
+               Disabled Nodes: 1
                Filter: (t @@ '''wr'' & ''qh'''::tsquery)
-(5 rows)
+(8 rows)
 
 SELECT id, id <=> 400 FROM test_int8_h_a WHERE t @@ 'wr&qh' ORDER BY id <=> 400 LIMIT 5;
  id  | ?column? 
@@ -551,11 +571,14 @@ SELECT id, id <=| 400 FROM test_int8_h_a WHERE t @@ 'wr&qh' ORDER BY id <=| 400 
                        QUERY PLAN                        
 ---------------------------------------------------------
  Limit
+   Disabled Nodes: 1
    ->  Sort
+         Disabled Nodes: 1
          Sort Key: ((id <=| '400'::bigint))
          ->  Seq Scan on test_int8_h_a
+               Disabled Nodes: 1
                Filter: (t @@ '''wr'' & ''qh'''::tsquery)
-(5 rows)
+(8 rows)
 
 SELECT id, id <=| 400 FROM test_int8_h_a WHERE t @@ 'wr&qh' ORDER BY id <=| 400 LIMIT 5;
  id  | ?column? 
@@ -572,11 +595,14 @@ SELECT id, id |=> 400 FROM test_int8_h_a WHERE t @@ 'wr&qh' ORDER BY id |=> 400 
                        QUERY PLAN                        
 ---------------------------------------------------------
  Limit
+   Disabled Nodes: 1
    ->  Sort
+         Disabled Nodes: 1
          Sort Key: ((id |=> '400'::bigint))
          ->  Seq Scan on test_int8_h_a
+               Disabled Nodes: 1
                Filter: (t @@ '''wr'' & ''qh'''::tsquery)
-(5 rows)
+(8 rows)
 
 SELECT id, id |=> 400 FROM test_int8_h_a WHERE t @@ 'wr&qh' ORDER BY id |=> 400 LIMIT 5;
  id  | ?column? 
@@ -593,10 +619,12 @@ SELECT id FROM test_int8_h_a WHERE  t @@ 'wr&qh' AND id <= 400::int8 ORDER BY id
                                   QUERY PLAN                                   
 -------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: id
    ->  Seq Scan on test_int8_h_a
+         Disabled Nodes: 1
          Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (id <= '400'::bigint))
-(4 rows)
+(6 rows)
 
 SELECT id FROM test_int8_h_a WHERE  t @@ 'wr&qh' AND id <= 400::int8 ORDER BY id;
  id  
@@ -618,10 +646,12 @@ SELECT id FROM test_int8_h_a WHERE  t @@ 'wr&qh' AND id >= 400::int8 ORDER BY id
                                   QUERY PLAN                                   
 -------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: id
    ->  Seq Scan on test_int8_h_a
+         Disabled Nodes: 1
          Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (id >= '400'::bigint))
-(4 rows)
+(6 rows)
 
 SELECT id FROM test_int8_h_a WHERE  t @@ 'wr&qh' AND id >= 400::int8 ORDER BY id;
  id  
@@ -643,10 +673,12 @@ SELECT id FROM test_int8_h_a WHERE  t @@ 'wr&qh' AND id <= 400::int8 ORDER BY id
                                   QUERY PLAN                                   
 -------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: ((id <=> '400'::bigint))
    ->  Seq Scan on test_int8_h_a
+         Disabled Nodes: 1
          Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (id <= '400'::bigint))
-(4 rows)
+(6 rows)
 
 SELECT id FROM test_int8_h_a WHERE  t @@ 'wr&qh' AND id <= 400::int8 ORDER BY id <=> 400::int8;
  id  

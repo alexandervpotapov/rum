@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------
+ *  NOTE: This test behaves differenly
+ * ------------------------------------
+ *
+ * text.out - test output for 32/64-bit systems.
+ * text_2.out - test output for 32/64-bit systems (Rel 18).
+ *
+ */
 set enable_seqscan=off;
 
 CREATE TABLE test_text (

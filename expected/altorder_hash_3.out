@@ -12,6 +12,7 @@ CREATE TABLE atstsh (id int, t tsvector, d timestamp);
 \copy atstsh from 'data/tsts.data'
 CREATE INDEX atstsh_idx ON atstsh USING rum (t rum_tsvector_hash_addon_ops, d)
 	WITH (attach = 'd', to = 't', order_by_attach='t');
+ERROR:  doesn't support order index over pass-by-reference column
 INSERT INTO atstsh VALUES (-1, 't1 t2',  '2016-05-02 02:24:22.326724');
 INSERT INTO atstsh VALUES (-2, 't1 t2 t3',  '2016-05-02 02:26:22.326724');
 SELECT count(*) FROM atstsh WHERE t @@ 'wr|qh';
@@ -127,13 +128,13 @@ SET enable_bitmapscan=on;
 SET enable_seqscan = off;
 EXPLAIN (costs off)
 SELECT count(*) FROM atstsh WHERE t @@ 'wr|qh';
-                         QUERY PLAN                          
--------------------------------------------------------------
+                    QUERY PLAN                     
+---------------------------------------------------
  Aggregate
-   ->  Bitmap Heap Scan on atstsh
-         Recheck Cond: (t @@ '''wr'' | ''qh'''::tsquery)
-         ->  Bitmap Index Scan on atstsh_idx
-               Index Cond: (t @@ '''wr'' | ''qh'''::tsquery)
+   Disabled Nodes: 1
+   ->  Seq Scan on atstsh
+         Disabled Nodes: 1
+         Filter: (t @@ '''wr'' | ''qh'''::tsquery)
 (5 rows)
 
 SELECT count(*) FROM atstsh WHERE t @@ 'wr|qh';
@@ -174,13 +175,13 @@ SELECT count(*) FROM atstsh WHERE t @@ '(eq|yt)&(wr|qh)';
 
 EXPLAIN (costs off)
 SELECT count(*) FROM atstsh WHERE d < '2016-05-16 14:21:25';
-                                       QUERY PLAN                                        
------------------------------------------------------------------------------------------
+                                  QUERY PLAN                                   
+-------------------------------------------------------------------------------
  Aggregate
-   ->  Bitmap Heap Scan on atstsh
-         Recheck Cond: (d < 'Mon May 16 14:21:25 2016'::timestamp without time zone)
-         ->  Bitmap Index Scan on atstsh_idx
-               Index Cond: (d < 'Mon May 16 14:21:25 2016'::timestamp without time zone)
+   Disabled Nodes: 1
+   ->  Seq Scan on atstsh
+         Disabled Nodes: 1
+         Filter: (d < 'Mon May 16 14:21:25 2016'::timestamp without time zone)
 (5 rows)
 
 SELECT count(*) FROM atstsh WHERE d < '2016-05-16 14:21:25';
@@ -191,13 +192,13 @@ SELECT count(*) FROM atstsh WHERE d < '2016-05-16 14:21:25';
 
 EXPLAIN (costs off)
 SELECT count(*) FROM atstsh WHERE d > '2016-05-16 14:21:25';
-                                       QUERY PLAN                                        
------------------------------------------------------------------------------------------
+                                  QUERY PLAN                                   
+-------------------------------------------------------------------------------
  Aggregate
-   ->  Bitmap Heap Scan on atstsh
-         Recheck Cond: (d > 'Mon May 16 14:21:25 2016'::timestamp without time zone)
-         ->  Bitmap Index Scan on atstsh_idx
-               Index Cond: (d > 'Mon May 16 14:21:25 2016'::timestamp without time zone)
+   Disabled Nodes: 1
+   ->  Seq Scan on atstsh
+         Disabled Nodes: 1
+         Filter: (d > 'Mon May 16 14:21:25 2016'::timestamp without time zone)
 (5 rows)
 
 SELECT count(*) FROM atstsh WHERE d > '2016-05-16 14:21:25';
@@ -212,13 +213,17 @@ SET enable_indexonlyscan=on;
 SET enable_bitmapscan=off;
 EXPLAIN (costs off)
 SELECT id, d, d <=> '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER BY d <=> '2016-05-16 14:21:25' LIMIT 5;
-                                    QUERY PLAN                                     
------------------------------------------------------------------------------------
+                                     QUERY PLAN                                      
+-------------------------------------------------------------------------------------
  Limit
-   ->  Index Scan using atstsh_idx on atstsh
-         Index Cond: (t @@ '''wr'' & ''qh'''::tsquery)
-         Order By: (d <=> 'Mon May 16 14:21:25 2016'::timestamp without time zone)
-(4 rows)
+   Disabled Nodes: 1
+   ->  Sort
+         Disabled Nodes: 1
+         Sort Key: ((d <=> 'Mon May 16 14:21:25 2016'::timestamp without time zone))
+         ->  Seq Scan on atstsh
+               Disabled Nodes: 1
+               Filter: (t @@ '''wr'' & ''qh'''::tsquery)
+(8 rows)
 
 SELECT id, d, d <=> '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER BY d <=> '2016-05-16 14:21:25' LIMIT 5;
  id  |                d                |   ?column?    
@@ -232,13 +237,17 @@ SELECT id, d, d <=> '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER B
 
 EXPLAIN (costs off)
 SELECT id, d, d <=| '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER BY d <=| '2016-05-16 14:21:25' LIMIT 5;
-                                    QUERY PLAN                                     
------------------------------------------------------------------------------------
+                                     QUERY PLAN                                      
+-------------------------------------------------------------------------------------
  Limit
-   ->  Index Scan using atstsh_idx on atstsh
-         Index Cond: (t @@ '''wr'' & ''qh'''::tsquery)
-         Order By: (d <=| 'Mon May 16 14:21:25 2016'::timestamp without time zone)
-(4 rows)
+   Disabled Nodes: 1
+   ->  Sort
+         Disabled Nodes: 1
+         Sort Key: ((d <=| 'Mon May 16 14:21:25 2016'::timestamp without time zone))
+         ->  Seq Scan on atstsh
+               Disabled Nodes: 1
+               Filter: (t @@ '''wr'' & ''qh'''::tsquery)
+(8 rows)
 
 SELECT id, d, d <=| '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER BY d <=| '2016-05-16 14:21:25' LIMIT 5;
  id  |                d                |   ?column?    
@@ -252,13 +261,17 @@ SELECT id, d, d <=| '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER B
 
 EXPLAIN (costs off)
 SELECT id, d, d |=> '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER BY d |=> '2016-05-16 14:21:25' LIMIT 5;
-                                    QUERY PLAN                                     
------------------------------------------------------------------------------------
+                                     QUERY PLAN                                      
+-------------------------------------------------------------------------------------
  Limit
-   ->  Index Scan using atstsh_idx on atstsh
-         Index Cond: (t @@ '''wr'' & ''qh'''::tsquery)
-         Order By: (d |=> 'Mon May 16 14:21:25 2016'::timestamp without time zone)
-(4 rows)
+   Disabled Nodes: 1
+   ->  Sort
+         Disabled Nodes: 1
+         Sort Key: ((d |=> 'Mon May 16 14:21:25 2016'::timestamp without time zone))
+         ->  Seq Scan on atstsh
+               Disabled Nodes: 1
+               Filter: (t @@ '''wr'' & ''qh'''::tsquery)
+(8 rows)
 
 SELECT id, d, d |=> '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER BY d |=> '2016-05-16 14:21:25' LIMIT 5;
  id  |                d                |   ?column?    
@@ -272,12 +285,16 @@ SELECT id, d, d |=> '2016-05-16 14:21:25' FROM atstsh WHERE t @@ 'wr&qh' ORDER B
 
 EXPLAIN (costs off)
 SELECT id, d, d <=> '2016-05-16 14:21:25' FROM atstsh ORDER BY d <=> '2016-05-16 14:21:25' LIMIT 5;
-                                    QUERY PLAN                                     
------------------------------------------------------------------------------------
+                                     QUERY PLAN                                      
+-------------------------------------------------------------------------------------
  Limit
-   ->  Index Scan using atstsh_idx on atstsh
-         Order By: (d <=> 'Mon May 16 14:21:25 2016'::timestamp without time zone)
-(3 rows)
+   Disabled Nodes: 1
+   ->  Sort
+         Disabled Nodes: 1
+         Sort Key: ((d <=> 'Mon May 16 14:21:25 2016'::timestamp without time zone))
+         ->  Seq Scan on atstsh
+               Disabled Nodes: 1
+(7 rows)
 
 SELECT id, d, d <=> '2016-05-16 14:21:25' FROM atstsh ORDER BY d <=> '2016-05-16 14:21:25' LIMIT 5;
  id  |                d                |  ?column?   
@@ -291,13 +308,15 @@ SELECT id, d, d <=> '2016-05-16 14:21:25' FROM atstsh ORDER BY d <=> '2016-05-16
 
 EXPLAIN (costs off)
 SELECT id, d FROM atstsh WHERE  t @@ 'wr&qh' AND d <= '2016-05-16 14:21:25' ORDER BY d;
-                                                         QUERY PLAN                                                         
-----------------------------------------------------------------------------------------------------------------------------
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: d
-   ->  Index Scan using atstsh_idx on atstsh
-         Index Cond: ((t @@ '''wr'' & ''qh'''::tsquery) AND (d <= 'Mon May 16 14:21:25 2016'::timestamp without time zone))
-(4 rows)
+   ->  Seq Scan on atstsh
+         Disabled Nodes: 1
+         Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (d <= 'Mon May 16 14:21:25 2016'::timestamp without time zone))
+(6 rows)
 
 SELECT id, d FROM atstsh WHERE  t @@ 'wr&qh' AND d <= '2016-05-16 14:21:25' ORDER BY d;
  id  |                d                
@@ -315,13 +334,15 @@ SELECT id, d FROM atstsh WHERE  t @@ 'wr&qh' AND d <= '2016-05-16 14:21:25' ORDE
 
 EXPLAIN (costs off)
 SELECT id, d FROM atstsh WHERE  t @@ 'wr&qh' AND d >= '2016-05-16 14:21:25' ORDER BY d;
-                                                         QUERY PLAN                                                         
-----------------------------------------------------------------------------------------------------------------------------
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
  Sort
+   Disabled Nodes: 1
    Sort Key: d
-   ->  Index Scan using atstsh_idx on atstsh
-         Index Cond: ((t @@ '''wr'' & ''qh'''::tsquery) AND (d >= 'Mon May 16 14:21:25 2016'::timestamp without time zone))
-(4 rows)
+   ->  Seq Scan on atstsh
+         Disabled Nodes: 1
+         Filter: ((t @@ '''wr'' & ''qh'''::tsquery) AND (d >= 'Mon May 16 14:21:25 2016'::timestamp without time zone))
+(6 rows)
 
 SELECT id, d FROM atstsh WHERE  t @@ 'wr&qh' AND d >= '2016-05-16 14:21:25' ORDER BY d;
  id  |                d                

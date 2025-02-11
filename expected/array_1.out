@@ -5,6 +5,8 @@
  *
  * array.out - test output for 64-bit systems and
  * array_1.out - test output for 32-bit systems.
+ * array_2.out - test output for 64-bit systems (Rel 18).
+ * array_3.out - test output for 32-bit systems (Rel 18).
  *
  */
 set enable_seqscan=off;

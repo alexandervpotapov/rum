@@ -5,6 +5,7 @@
  *
  * altorder_hash.out - test output for 64-bit systems and
  * altorder_hash_1.out - test output for 32-bit systems.
+ * altorder_hash_3.out - test output for 32-bit systems (Rel 18).
  *
  */
 

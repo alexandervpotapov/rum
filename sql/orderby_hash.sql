@@ -5,6 +5,8 @@
  *
  * orderby_hash.out - test output for 64-bit systems and
  * orderby_hash_1.out - test output for 32-bit systems.
+ * orderby_hash_2.out - test output for 64-bit systems (Rel 18).
+ * orderby_hash_3.out - test output for 32-bit systems (Rel 18).
  *
  */
 
